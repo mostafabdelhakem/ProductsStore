@@ -1,13 +1,30 @@
-<!doctype html>
+<!-- 
+  This file serves as the entry point for the frontend of the MERN application.
+  It provides the root HTML structure and links to the main React application.
+  The React app is mounted on the <div> with the id "root".
+-->
+
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+  <!-- Meta information -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+
+  <!-- Page title -->
+  <title>Product Store</title>
+</head>
+
+<body>
+  <!-- Root div where the React app will be mounted -->
+  <div id="root"></div>
+
+  <!-- Main script to load the React application -->
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>

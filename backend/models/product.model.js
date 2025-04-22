@@ -1,24 +1,30 @@
-import mongoose from "mongoose";
+// This file defines the Mongoose schema and model for the Product entity.
+// It specifies the structure of the product documents stored in the MongoDB database.
 
+import mongoose from "mongoose"; // Import mongoose for schema and model creation
+
+// Define the schema for a product
 const productSchema = new mongoose.Schema(
   {
     name: {
-      type: String,
-      required: true,
+      type: String, // Product name must be a string
+      required: true, // Name is required
     },
     price: {
-      type: Number,
-      required: true,
+      type: Number, // Product price must be a number
+      required: true, // Price is required
     },
     image: {
-      type: String,
-      required: true,
+      type: String, // Product image URL must be a string
+      required: true, // Image URL is required
     },
   },
   {
-    timestamps: true, // createdAt, updatedAt
+    timestamps: true, // Automatically add createdAt and updatedAt fields
   }
 );
 
-const Product = mongoose.model("Product", productSchema); // mongoos will handel it from Product to products
-export default Product;
+// Create the Product model from the schema
+const Product = mongoose.model("Product", productSchema); // Mongoose will map "Product" to the "products" collection in MongoDB
+
+export default Product; // Export the Product model for use in other parts of the application

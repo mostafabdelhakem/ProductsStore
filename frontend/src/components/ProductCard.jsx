@@ -1,4 +1,7 @@
-// Chakra UI components
+// This file defines the ProductCard component for displaying individual product details.
+// It includes functionality for editing and deleting products using a modal and Zustand store.
+
+import React, { useState } from "react";
 import {
   Box,
   Heading,
@@ -19,33 +22,29 @@ import {
   Text,
   ModalFooter,
   Button,
+  Divider,
+  Badge,
 } from "@chakra-ui/react";
-
-// Chakra UI icons
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-
-// React
-import React, { useState } from "react";
-
-// Zustand store
-import { useProductStore } from "../store/product";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons"; // Chakra UI icons
+import { useProductStore } from "../store/product"; // Zustand store for product management
 
 const ProductCard = ({ product }) => {
-  const [updatedProduct, setUpdatedProduct] = useState(product); // State to manage product updates
-  // Determine text color based on the current color mode (light or dark)
-  const textColor = useColorModeValue("gray.800", "whiteAlpha.900");
+  // State to manage product updates
+  const [updatedProduct, setUpdatedProduct] = useState(product);
 
-  // Determine background color based on the current color mode (light or dark)
+  // Determine text and background colors based on the current color mode (light or dark)
+  const textColor = useColorModeValue("gray.800", "whiteAlpha.900");
   const bg = useColorModeValue("white", "gray.800");
 
   const toast = useToast(); // Initialize toast for notifications
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure(); // Modal state management
 
-  // Function to handle product deletion
+  // Zustand store functions for deleting and updating products
   const { deleteProduct, updateProduct } = useProductStore();
 
+  // Function to handle product deletion
   const handleDeleteProduct = async (pid) => {
-    const { success, message } = await deleteProduct(pid); // Call the deleteProduct function from the store
+    const { success, message } = await deleteProduct(pid);
     if (!success) {
       toast({
         title: "Error",
@@ -65,8 +64,9 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const handelUpdateProduct = async (pid, updatedProduct) => {
-    const { success, message } = await updateProduct(pid, updatedProduct); // Call the updateProduct function from the store
+  // Function to handle product updates
+  const handleUpdateProduct = async (pid, updatedProduct) => {
+    const { success, message } = await updateProduct(pid, updatedProduct);
     onClose(); // Close the modal after updating
     if (!success) {
       toast({
@@ -90,10 +90,13 @@ const ProductCard = ({ product }) => {
   return (
     <Box
       shadow="lg" // Add a large shadow to the card
-      rounded={"lg"} // Apply rounded corners
-      overflow={"hidden"} // Hide overflow content
-      transition={"all 0.3s"} // Smooth transition for hover effects
-      _hover={{ transform: "translateY(-5px)", shadow: "xl" }} // Hover effect: move up slightly and increase shadow
+      rounded="lg" // Apply rounded corners
+      overflow="hidden" // Hide overflow content
+      transition="all 0.3s" // Smooth transition for hover effects
+      _hover={{
+        transform: "scale(1.02) translateY(-5px)", // Slight scaling and rotation on hover
+        shadow: "2xl", // Increase shadow on hover
+      }}
       bg={bg} // Set background color based on the color mode
     >
       {/* Product image */}
@@ -102,38 +105,66 @@ const ProductCard = ({ product }) => {
         alt={product.name} // Alternative text for the image
         h={48} // Set height of the image
         w="full" // Set width to full
-        objectFit={"cover"} // Ensure the image covers the container
+        objectFit="cover" // Ensure the image covers the container
       />
 
       <Box p={4}>
         {/* Product name */}
-        <Heading as={"h3"} size="md" mb={2}>
+        <Heading as="h3" size="md" mb={2}>
           {product.name}
         </Heading>
 
+        {/* Divider for separation */}
+        <Divider mb={4} />
+
         {/* Product price */}
         <Text fontWeight="bold" fontSize="xl" color={textColor} mb={4}>
-          ${product.price}
+          <Badge colorScheme="green" fontSize="lg">
+            ${product.price}
+          </Badge>
         </Text>
 
         {/* Action buttons for editing and deleting the product */}
         <HStack spacing={4}>
-          <IconButton icon={<EditIcon />} onClick={onOpen} colorScheme="blue" />{" "}
           {/* Edit button */}
           <IconButton
-            icon={<DeleteIcon />}
-            colorScheme="red"
-            onClick={() => handleDeleteProduct(product._id)}
-          />{" "}
+            icon={<EditIcon />}
+            onClick={onOpen}
+            bgGradient="linear(to-r, blue.400, blue.600)" // Gradient background
+            color="white"
+            _hover={{
+              bgGradient: "linear(to-r, blue.500, blue.700)", // Darker gradient on hover
+              transform: "scale(1.1)", // Slight scaling effect on hover
+            }}
+            aria-label="Edit Product"
+          />
+
           {/* Delete button */}
+          <IconButton
+            icon={<DeleteIcon />}
+            bgGradient="linear(to-r, red.400, red.600)" // Gradient background
+            color="white"
+            _hover={{
+              bgGradient: "linear(to-r, red.500, red.700)", // Darker gradient on hover
+              transform: "scale(1.1)", // Slight scaling effect on hover
+            }}
+            onClick={() => handleDeleteProduct(product._id)}
+            aria-label="Delete Product"
+          />
         </HStack>
       </Box>
 
       {/* Modal for editing the product */}
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} motionPreset="slideInBottom">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Update Product</ModalHeader>
+          <ModalHeader
+            bgGradient="linear(to-r, blue.400, blue.600)" // Gradient background
+            color="white" // White text
+            textAlign="center" // Center align the text
+          >
+            Update Product
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing={4}>
@@ -175,7 +206,7 @@ const ProductCard = ({ product }) => {
             <Button
               colorScheme="blue"
               mr={3}
-              onClick={() => handelUpdateProduct(product._id, updatedProduct)}
+              onClick={() => handleUpdateProduct(product._id, updatedProduct)}
             >
               Update
             </Button>
